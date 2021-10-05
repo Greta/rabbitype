@@ -1,0 +1,11 @@
+@font-face {
+  font-family: notOK;
+  src: url(fonts/dpcomic.ttf);
+}
+
+body {
+  margin: 0;
+  font-family: notOK;
+  font-size: 31px;
+  background: #000;
+}
