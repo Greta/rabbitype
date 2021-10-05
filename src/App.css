@@ -3,6 +3,10 @@
   src: url(fonts/dpcomic.ttf);
 }
 
+body {
+  margin: 0;
+}
+
 .App {
   text-align: center;
   font-family: notOK;
@@ -10,14 +14,8 @@
 }
 
 .App-logo {
-  height: 40vmin;
+  height: 100vmin;
   pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
 }
 
 .App-header {
@@ -32,13 +30,4 @@
 
 .App-link {
   color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }
