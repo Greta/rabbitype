@@ -1,27 +1,39 @@
 import React from "react";
-import styled from "styled-components";
+import EngineContext, {EngineContextObject} from "./EngineContext";
 
-import logo from "../assets/logo.gif";
+interface ScreenProps {
+  id: string;
+  element: React.ReactNode | null;
+}
 
-const Screen = styled.div`
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  > img {
-    height: 100vmin;
-  };
-`;
-
-const Screens: React.FC = () => {
+export const Screen: React.FC<ScreenProps> = ({
+  id, element
+}) => {
   return (
-    <div className="screens">
-      <Screen>
-        <img src={logo} alt="logo" />
-      </Screen>
+    <div className="screen" id={id}>
+      {element}
     </div>
+  );
+};
+
+interface ScreensProps {
+  children: React.ReactElement<ScreenProps>[];
+}
+
+const Screens: React.FC<ScreensProps> = ({
+  children
+}) => {
+  const {currentScreen} = React.useContext(EngineContext) as EngineContextObject;
+  const screen: React.ReactElement<ScreenProps>[] = [];
+
+  React.Children.forEach(children, (child: React.ReactElement<ScreenProps>) => {
+    if (currentScreen === child.props.id) {
+      screen.push(child);
+    }
+  });
+
+  return (
+    <div>{screen}</div>
   );
 };
 

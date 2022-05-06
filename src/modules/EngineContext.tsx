@@ -1,6 +1,11 @@
 import React from "react";
 
-const EngineContext = React.createContext({});
+export interface EngineContextObject {
+  currentScreen: string;
+  changeScreen: (screen: string) => void;
+}
+
+const EngineContext = React.createContext<EngineContextObject | null>(null);
 
 export const EngineProvider = EngineContext.Provider;
 
