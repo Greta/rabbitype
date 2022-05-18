@@ -1,5 +1,5 @@
 import React from "react";
-import EngineContext, {EngineContextObject} from "./EngineContext";
+import EngineContext, { EngineContextObject } from "./EngineContext";
 
 interface ScreenProps {
   id: string;
@@ -23,11 +23,11 @@ interface ScreensProps {
 const Screens: React.FC<ScreensProps> = ({
   children
 }) => {
-  const {currentScreen} = React.useContext(EngineContext) as EngineContextObject;
+  const {screen:screenId} = React.useContext(EngineContext) as EngineContextObject;
   const screen: React.ReactElement<ScreenProps>[] = [];
 
   React.Children.forEach(children, (child: React.ReactElement<ScreenProps>) => {
-    if (currentScreen === child.props.id) {
+    if (screenId === child.props.id) {
       screen.push(child);
     }
   });

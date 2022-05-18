@@ -1,8 +1,8 @@
 import React from "react";
 
 export interface EngineContextObject {
-  currentScreen: string;
-  changeScreen: (screen: string) => void;
+  screen: string;
+  changeScreen: (screen: string, transition?: string) => void;
 }
 
 const EngineContext = React.createContext<EngineContextObject | null>(null);
