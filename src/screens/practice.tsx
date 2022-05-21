@@ -32,9 +32,38 @@ const StyledScreen = styled.div`
   }
 `;
 
+const Letters = styled.div`
+  font-size: 4em;
+  letter-spacing: .15em;
+  & > span:first-child {
+    color: #470c29;
+    text-shadow:
+      5px 0px 0px #a31a5d,
+      -5px 0px 0px #a31a5d,
+      5px 5px 0px #a31a5d,
+      5px -5px 0px #a31a5d,
+      -5px 5px 0px #a31a5d,
+      -5px -5px 0px #a31a5d;
+  }
+  & > span:last-child {
+    color: black;
+    text-shadow:
+      5px 0px 0px #a31a5d,
+      -5px 0px 0px #a31a5d,
+      5px 5px 0px #a31a5d,
+      5px -5px 0px #a31a5d,
+      -5px 5px 0px #a31a5d,
+      -5px -5px 0px #a31a5d;
+  }
+`;
+
 const PracticeScreen: React.FC = () => {
   const {gameSettings: settings, changeScreen} = useContext(EngineContext) as EngineContextObject;
   const [str, setStr] = useState("");
+  const [next, setNext] = useState("");
+  const [progress, setProgress] = useState("");
+  const [remaining, setRemaining] = useState("");
+  const [pressed, setPressed] = useState("");
 
   const createString = () => {
     const pool = keys[settings.pool ? settings.pool : "home"];
@@ -44,19 +73,40 @@ const PracticeScreen: React.FC = () => {
       str += pool[Math.floor(Math.random() * pool.length)];
     }
 
-    setStr(str);
+    return str;
+  };
+
+  const setupStr = () => {
+    const newStr = createString();
+    setStr(newStr);
+    setRemaining(newStr);
+    setProgress("");
+    setNext(newStr.charAt(0));
   };
 
   const handleKeyDown = (e: KeyboardEvent) =>{
-    // TODO: aknowledge user key strokes!
-    console.log(e.key);
+    setPressed(e.key + Date.now());
   };
   
   useEffect(() => {
-    createString();
+    setupStr();
     document.addEventListener("keydown", handleKeyDown);
     return (): void => document.removeEventListener("keydown", handleKeyDown);
   }, []);
+
+  useEffect(() => {
+    if (pressed[0] !== next) return;
+    const newProgress = progress + next;
+    setProgress(newProgress);
+    setRemaining(str.slice(newProgress.length));
+
+    if (newProgress.length === str.length) {
+      // CELEBRATION HERE
+      setTimeout(setupStr, 300);
+    } else {
+      setNext(str.charAt(newProgress.length));
+    }
+  }, [pressed]);
 
   return (
     <div>
@@ -64,8 +114,10 @@ const PracticeScreen: React.FC = () => {
         <img src={backImg} alt="back" />
       </Back>
       <StyledScreen>
-        <h1>{str}</h1>
-
+        <Letters>
+          <span>{progress}</span>
+          <span>{remaining}</span>
+        </Letters>
       </StyledScreen>
     </div>
   );

@@ -6,7 +6,7 @@ const Buttons = styled.div`
   & > div {
     text-align: center;
     margin: 15px;
-    padding: 5px 10px;
+    padding: 10px 10px 5px;
     border: 3px solid white;
     &:hover {
       background: #1a1a1a;
@@ -59,7 +59,7 @@ const OptionButton: React.FC<OptionButtonProps> = ({id, text}) => {
 const MainMenu: React.FC = () => {
   return (
     <StyledScreen>
-      <h1>Key to the Garden</h1>
+      <h1>Rabbitype</h1>
       <h2>Simple Practice</h2>
       <Buttons>
         <OptionButton id="top" text="Top Row" />

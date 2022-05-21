@@ -1,6 +1,6 @@
 @font-face {
-  font-family: notOK;
-  src: url(fonts/dpcomic.ttf);
+  font-family: peaberry;
+  src: url(fonts/peaberry.ttf);
 }
 
 html {
@@ -9,10 +9,15 @@ html {
 
 body {
   margin: 0;
-  font-family: notOK;
+  font-family: peaberry;
   font-size: 31px;
   background: #000;
   color: #fff;
   max-height: 100vh;
   overflow: hidden;
+}
+
+h1, h2 {
+  font-weight: 100;
+  text-shadow: 2px 2px 2px rgba(255, 255, 255, .5);
 }
