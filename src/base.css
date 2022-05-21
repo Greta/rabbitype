@@ -3,9 +3,16 @@
   src: url(fonts/dpcomic.ttf);
 }
 
+html {
+  cursor: url(assets/pointer.png), pointer;
+}
+
 body {
   margin: 0;
   font-family: notOK;
   font-size: 31px;
   background: #000;
+  color: #fff;
+  max-height: 100vh;
+  overflow: hidden;
 }
