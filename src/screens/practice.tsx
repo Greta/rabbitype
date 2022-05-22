@@ -8,7 +8,7 @@ const keys: Record<string, string> = {
   home: "asdfghjkl;'",
   top: "qwertyuiop",
   bottom: "zxcvbnm",
-  all: "asdfghjklqwertyuiopzxcvbnm"
+  numbers: "1234567890"
 };
 
 const Back = styled.div`
@@ -58,16 +58,15 @@ const Letters = styled.div`
 `;
 
 const PracticeScreen: React.FC = () => {
-  const {gameSettings: settings, changeScreen} = useContext(EngineContext) as EngineContextObject;
+  const {practiceSettings: settings, changeScreen} = useContext(EngineContext) as EngineContextObject;
   const [str, setStr] = useState("");
   const [next, setNext] = useState("");
   const [progress, setProgress] = useState("");
   const [remaining, setRemaining] = useState("");
   const [pressed, setPressed] = useState("");
+  const [savedPool, setSavedPool] = useState("");
 
-  const createString = () => {
-    const pool = keys[settings.pool ? settings.pool : "home"];
-
+  const createString = (pool: string) => {
     let str = "";
     while (str.length < settings.length) {
       str += pool[Math.floor(Math.random() * pool.length)];
@@ -76,20 +75,32 @@ const PracticeScreen: React.FC = () => {
     return str;
   };
 
-  const setupStr = () => {
-    const newStr = createString();
+  const setupStr = (pool: string) => {
+    const newStr = createString(pool);
     setStr(newStr);
     setRemaining(newStr);
     setProgress("");
     setNext(newStr.charAt(0));
   };
 
-  const handleKeyDown = (e: KeyboardEvent) =>{
+  const configurePool = () => {
+    let pool = "";
+    let key: keyof typeof settings.pool;
+    for (key in settings.pool) {
+      if (settings.pool[key]) {
+        pool += keys[key];
+      }
+    }
+    setSavedPool(pool);
+    setupStr(pool);
+  };
+
+  const handleKeyDown = (e: KeyboardEvent) => {
     setPressed(e.key + Date.now());
   };
   
   useEffect(() => {
-    setupStr();
+    configurePool();
     document.addEventListener("keydown", handleKeyDown);
     return (): void => document.removeEventListener("keydown", handleKeyDown);
   }, []);
@@ -102,7 +113,7 @@ const PracticeScreen: React.FC = () => {
 
     if (newProgress.length === str.length) {
       // CELEBRATION HERE
-      setTimeout(setupStr, 300);
+      setTimeout(() => setupStr(savedPool), 300);
     } else {
       setNext(str.charAt(newProgress.length));
     }

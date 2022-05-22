@@ -3,8 +3,8 @@ import { Engine } from "./modules";
 
 import "./base.css";
 
-const FM: React.FC = () => (
+const RT: React.FC = () => (
   <Engine />
 );
 
-export default FM;
+export default RT;

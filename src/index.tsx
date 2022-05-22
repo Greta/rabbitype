@@ -1,11 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import FM from "./FM";
+import RT from "./RT";
 import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
   <React.StrictMode>
-    <FM />
+    <RT />
   </React.StrictMode>,
   document.getElementById("root")
 );

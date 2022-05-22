@@ -3,21 +3,37 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 // Modules to control application life and create native browser window
 const path = require("path");
+const electron = require("electron");
 const {app, BrowserWindow} = require("electron");
 const isDev = require("electron-is-dev");
 
 function createWindow () {
-  // Create the browser window.
-  const win = new BrowserWindow({
-    width: 800,
-    height: 600,
+  let displays = electron.screen.getAllDisplays();
+  let externalDisplay = displays.find((displays) => {
+    return displays.bounds.x !== 0 || displays.bounds.y !== 0;
+  });
+
+  let winOpts = {
+    // width: 800,
+    // height: 600,
     frame: false,
-    //fullscreen: true,
+    fullscreen: true,
     webPreferences: {
       nodeIntegration: true,
     },
-  });
+  };
 
+  if (externalDisplay) {
+    winOpts = {
+      ...winOpts,
+      x: externalDisplay.bounds.x,
+      y: externalDisplay.bounds.y
+    };
+  }
+
+  // Create the browser window.
+  const win = new BrowserWindow(winOpts);
+  
   // and load the app.
   win.loadURL(
     isDev ? "http://localhost:3000" : `file://${path.join(__dirname, "../build/index.html")}`

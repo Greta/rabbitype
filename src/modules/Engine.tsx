@@ -6,7 +6,13 @@ const Engine: React.FC = () => {
   const [screen, setScreen] = React.useState("logo");
   const [transitioning, setTransitioning] = React.useState(false);
   const [transition, setTransition] = React.useState("fade");
-  const [gameSettings, updateGameSettings] = React.useState({
+  const [practiceSettings, updatePracticeSettings] = React.useState({
+    pool: {
+      top: false,
+      home: false,
+      bottom: false,
+      numbers: false
+    },
     length: 5
   });
 
@@ -28,8 +34,8 @@ const Engine: React.FC = () => {
     <EngineProvider value={{
       screen,
       changeScreen,
-      gameSettings,
-      updateGameSettings
+      practiceSettings,
+      updatePracticeSettings
     }}>
       <Screens>
         <Screen id="logo" element={<Logo />} />

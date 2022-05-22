@@ -1,15 +1,20 @@
 import React from "react";
 
-interface settings {
-  pool?: string;
+export interface PracticeSettingsProps {
+  pool: {
+    top: boolean,
+    home: boolean,
+    bottom: boolean,
+    numbers: boolean,
+  };
   length: number;
 }
 
 export interface EngineContextObject {
   screen: string;
   changeScreen: (screen: string, transition?: string) => void;
-  gameSettings: settings;
-  updateGameSettings: (settings: settings) => void;
+  practiceSettings: PracticeSettingsProps;
+  updatePracticeSettings: (settings: PracticeSettingsProps) => void;
 }
 
 const EngineContext = React.createContext<EngineContextObject | null>(null);

@@ -1,6 +1,8 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import styled from "styled-components";
 import EngineContext, { EngineContextObject } from "../modules/EngineContext";
+
+const highlight = "cyan";
 
 const Buttons = styled.div`
   & > div {
@@ -12,20 +14,55 @@ const Buttons = styled.div`
       background: #1a1a1a;
     }
     &.on {
-      border-color: #a31a5d;
-      color: #a31a5d;
+      border-color: ${highlight};
+      color: ${highlight};
     }
   }
 `;
 
-const StyledScreen = styled.div`
-  min-height: 100vh;
+const Flex = styled.div`
+  padding: 100px;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  & h1, & h2 {
+`;
+
+const Menu = styled.div`
+  flex: 0 0 450px;
+  text-align: center;
+  & h1 {
+    font-size: 2.5em;
     margin: 15px;
+  }
+  > div {
+    width: 300px;
+    margin: 30px auto;
+  }
+`;
+
+const SubMenu = styled.div`
+  flex: 1;
+  padding-left: 50px;
+`;
+
+const OptionGroup = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 0 5vw;
+  > div {
+    &.on {
+      color: ${highlight}
+    }
+  }
+`;
+
+const Go = styled.div`
+  color: magenta;
+  border: 3px solid magenta;
+  float: right;
+  padding: 10px 15px 6px;
+  margin-top: 50px;
+  &:hover {
+    color: yellow;
   }
 `;
 
@@ -34,22 +71,23 @@ interface OptionButtonProps {
   text: string;
 }
 
-const OptionButton: React.FC<OptionButtonProps> = ({id, text}) => {
+const Option: React.FC<OptionButtonProps> = ({id, text}) => {
   const {
-    gameSettings: settings,
-    updateGameSettings: updateSettings,
-    changeScreen
+    practiceSettings: settings,
+    updatePracticeSettings: updateSettings,
   } = useContext(EngineContext) as EngineContextObject;
 
-  const handleClick = (pool: string) => {
-    updateSettings({...settings, pool });
-    changeScreen("practice");
+  const handleClick = (pool: keyof typeof settings.pool) => {
+    const newSettings = { ...settings };
+    newSettings.pool[pool] = !newSettings.pool[pool];
+    updateSettings(newSettings);
   };
 
+  const typedId = id as keyof typeof settings.pool;
   return (
     <div
-      className={`${settings.pool === id ? "on" : ""}`}
-      onClick={ () => handleClick(id) }
+      className={`${settings.pool[typedId] ? "on" : ""}`}
+      onClick={ () => handleClick(typedId) }
     >
       {text}
     </div>
@@ -57,17 +95,41 @@ const OptionButton: React.FC<OptionButtonProps> = ({id, text}) => {
 };
 
 const MainMenu: React.FC = () => {
+  const { changeScreen } = useContext(EngineContext) as EngineContextObject;
+  const [menuChoice, setMenuChoice] = useState("");
+
   return (
-    <StyledScreen>
-      <h1>Rabbitype</h1>
-      <h2>Simple Practice</h2>
-      <Buttons>
-        <OptionButton id="top" text="Top Row" />
-        <OptionButton id="home" text="Home Row" />
-        <OptionButton id="bottom" text="Bottom Row" />
-        <OptionButton id="all" text="All Letters" />
-      </Buttons>
-    </StyledScreen>
+    <Flex>
+      <Menu>
+        <h1>Rabbitype</h1>
+        <Buttons>
+          <div
+            className={menuChoice === "story" ? "on" : ""}
+            onClick={() => setMenuChoice("story")}>STORY</div>
+          <div
+            className={menuChoice === "practice" ? "on" : ""}
+            onClick={() => setMenuChoice("practice")}>PRACTICE</div>
+        </Buttons>
+      </Menu>
+      {menuChoice === "story" &&
+        <SubMenu>
+          <h2>[Story Track]</h2>
+        </SubMenu>
+      }
+      {menuChoice === "practice" &&
+        <SubMenu>
+          <h2>Practice</h2>
+          <h3>Key Pool</h3>
+          <OptionGroup>
+            <Option id="top" text="Top Row" />
+            <Option id="home" text="Home Row" />
+            <Option id="bottom" text="Bottom Row" />
+            <Option id="numbers" text="Numbers" />
+          </OptionGroup>
+          <Go onClick={() => changeScreen("practice")}>Go!</Go>
+        </SubMenu>
+      }
+    </Flex>
   );
 };
 
