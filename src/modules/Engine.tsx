@@ -13,7 +13,11 @@ const Engine: React.FC = () => {
       bottom: false,
       numbers: false
     },
-    length: 5
+    length: {
+      min: 6,
+      max: 20,
+      isRange: false
+    }
   });
 
   // TODO: set transition duration to a variable

@@ -2,6 +2,9 @@ import React, { useContext, useState } from "react";
 import styled from "styled-components";
 import EngineContext, { EngineContextObject } from "../modules/EngineContext";
 
+import radioOn from "../assets/radio-on.png";
+import radioOff from "../assets/radio-off.png";
+
 const highlight = "cyan";
 
 const Buttons = styled.div`
@@ -52,6 +55,9 @@ const OptionGroup = styled.div`
     &.on {
       color: ${highlight}
     }
+    &.off {
+      color: #1a1a1a;
+    }
   }
 `;
 
@@ -87,7 +93,7 @@ const Option: React.FC<OptionButtonProps> = ({id, text}) => {
   return (
     <div
       className={`${settings.pool[typedId] ? "on" : ""}`}
-      onClick={ () => handleClick(typedId) }
+      onClick={() => handleClick(typedId)}
     >
       {text}
     </div>
@@ -95,8 +101,30 @@ const Option: React.FC<OptionButtonProps> = ({id, text}) => {
 };
 
 const MainMenu: React.FC = () => {
-  const { changeScreen } = useContext(EngineContext) as EngineContextObject;
+  const {
+    practiceSettings: settings,
+    updatePracticeSettings: updateSettings,
+    changeScreen
+  } = useContext(EngineContext) as EngineContextObject;
   const [menuChoice, setMenuChoice] = useState("");
+
+  const handleMinUpdate = (i: number) => {
+    const newSettings = { ...settings };
+    newSettings.length.min = i;
+    updateSettings(newSettings);
+  };
+
+  const handleToggleRange = (isRange: boolean) => {
+    const newSettings = { ...settings };
+    newSettings.length.isRange = isRange;
+    updateSettings(newSettings);
+  };
+
+  const handleMaxUpdate = (i: number) => {
+    const newSettings = { ...settings };
+    newSettings.length.max = i;
+    updateSettings(newSettings);
+  };
 
   return (
     <Flex>
@@ -126,6 +154,47 @@ const MainMenu: React.FC = () => {
             <Option id="bottom" text="Bottom Row" />
             <Option id="numbers" text="Numbers" />
           </OptionGroup>
+          <h3>Length of Segment</h3>
+          <OptionGroup>
+            {[...Array(20)].map((num, i) =>
+              <div
+                key={i}
+                onClick={() => handleMinUpdate(i + 1)}
+                className={
+                  settings.length.min === i + 1 ? "on" :
+                    settings.length.max < i + 2 ? "off" : ""
+                }
+              >
+                {i + 1}
+              </div>
+            )}
+          </OptionGroup>
+          <OptionGroup>
+            <div onClick={() => handleToggleRange(!settings.length.isRange)}>
+              {settings.length.isRange &&
+                <img src={radioOn} />
+              }
+              {!settings.length.isRange &&
+                <img src={radioOff} />
+              } <small>make range</small>
+            </div>
+          </OptionGroup>
+          {settings.length.isRange &&
+            <OptionGroup>
+              {[...Array(20)].map((num, i) =>
+                <div
+                  key={i}
+                  onClick={() => handleMaxUpdate(i + 1)}
+                  className={
+                    settings.length.max === i + 1 ? "on" :
+                      settings.length.min > i ? "off" : ""
+                  }
+                >
+                  {i + 1}
+                </div>
+              )}
+            </OptionGroup>
+          }
           <Go onClick={() => changeScreen("practice")}>Go!</Go>
         </SubMenu>
       }

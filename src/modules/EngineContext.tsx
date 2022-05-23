@@ -7,7 +7,11 @@ export interface PracticeSettingsProps {
     bottom: boolean,
     numbers: boolean,
   };
-  length: number;
+  length: {
+    min: number;
+    max: number;
+    isRange: boolean;
+  };
 }
 
 export interface EngineContextObject {

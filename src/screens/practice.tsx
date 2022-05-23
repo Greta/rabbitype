@@ -67,8 +67,11 @@ const PracticeScreen: React.FC = () => {
   const [savedPool, setSavedPool] = useState("");
 
   const createString = (pool: string) => {
+    const { min, max, isRange } = settings.length;
+    const length = isRange ? Math.random() * (max - min) + min : min;
+
     let str = "";
-    while (str.length < settings.length) {
+    while (str.length < length) {
       str += pool[Math.floor(Math.random() * pool.length)];
     }
 
