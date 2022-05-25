@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/rabbitype/static/css/main.afb7f3a4.chunk.css",
+    "main.js": "/rabbitype/static/js/main.a9ae4833.chunk.js",
+    "main.js.map": "/rabbitype/static/js/main.a9ae4833.chunk.js.map",
+    "runtime-main.js": "/rabbitype/static/js/runtime-main.a1345fa3.js",
+    "runtime-main.js.map": "/rabbitype/static/js/runtime-main.a1345fa3.js.map",
+    "static/js/2.380eabc3.chunk.js": "/rabbitype/static/js/2.380eabc3.chunk.js",
+    "static/js/2.380eabc3.chunk.js.map": "/rabbitype/static/js/2.380eabc3.chunk.js.map",
+    "static/js/3.154ba45e.chunk.js": "/rabbitype/static/js/3.154ba45e.chunk.js",
+    "static/js/3.154ba45e.chunk.js.map": "/rabbitype/static/js/3.154ba45e.chunk.js.map",
+    "index.html": "/rabbitype/index.html",
+    "static/css/main.afb7f3a4.chunk.css.map": "/rabbitype/static/css/main.afb7f3a4.chunk.css.map",
+    "static/js/2.380eabc3.chunk.js.LICENSE.txt": "/rabbitype/static/js/2.380eabc3.chunk.js.LICENSE.txt",
+    "static/media/base.css": "/rabbitype/static/media/peaberry.996644ea.ttf"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.a1345fa3.js",
+    "static/js/2.380eabc3.chunk.js",
+    "static/css/main.afb7f3a4.chunk.css",
+    "static/js/main.a9ae4833.chunk.js"
+  ]
+}
