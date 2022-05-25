@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/rabbitype/static/css/main.afb7f3a4.chunk.css",
-    "main.js": "/rabbitype/static/js/main.a9ae4833.chunk.js",
-    "main.js.map": "/rabbitype/static/js/main.a9ae4833.chunk.js.map",
+    "main.js": "/rabbitype/static/js/main.9bfafcc3.chunk.js",
+    "main.js.map": "/rabbitype/static/js/main.9bfafcc3.chunk.js.map",
     "runtime-main.js": "/rabbitype/static/js/runtime-main.a1345fa3.js",
     "runtime-main.js.map": "/rabbitype/static/js/runtime-main.a1345fa3.js.map",
     "static/js/2.380eabc3.chunk.js": "/rabbitype/static/js/2.380eabc3.chunk.js",
@@ -18,6 +18,6 @@
     "static/js/runtime-main.a1345fa3.js",
     "static/js/2.380eabc3.chunk.js",
     "static/css/main.afb7f3a4.chunk.css",
-    "static/js/main.a9ae4833.chunk.js"
+    "static/js/main.9bfafcc3.chunk.js"
   ]
 }
