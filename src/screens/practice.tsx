@@ -106,6 +106,10 @@ const PracticeScreen: React.FC = () => {
     if (e.repeat) return;
     if (e.key === "Alt" || e.key === "Control" || e.key === "Shift") return;
     setPressed(e.key + Date.now());
+    if (e.key === "Backspace") {
+      e.preventDefault();
+      return false;
+    }
   };
   
   useEffect(() => {
