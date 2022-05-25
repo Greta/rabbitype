@@ -4,11 +4,15 @@ import { EngineContext, EngineContextObject } from "../modules";
 
 import backImg from "../assets/return.png";
 
+const fill = "cyan";
+const error = "yellow";
+const outline = "magenta";
+
 const keys: Record<string, string> = {
   home: "asdfghjkl;'",
   top: "qwertyuiop",
   bottom: "zxcvbnm",
-  numbers: "1234567890"
+  numbers: "1234567890",
 };
 
 const Back = styled.div`
@@ -35,25 +39,22 @@ const StyledScreen = styled.div`
 const Letters = styled.div`
   font-size: 4em;
   letter-spacing: .15em;
-  & > span:first-child {
-    color: #470c29;
-    text-shadow:
-      5px 0px 0px #a31a5d,
-      -5px 0px 0px #a31a5d,
-      5px 5px 0px #a31a5d,
-      5px -5px 0px #a31a5d,
-      -5px 5px 0px #a31a5d,
-      -5px -5px 0px #a31a5d;
-  }
-  & > span:last-child {
+  > span {
     color: black;
     text-shadow:
-      5px 0px 0px #a31a5d,
-      -5px 0px 0px #a31a5d,
-      5px 5px 0px #a31a5d,
-      5px -5px 0px #a31a5d,
-      -5px 5px 0px #a31a5d,
-      -5px -5px 0px #a31a5d;
+      5px 0px 0px ${outline},
+      -5px 0px 0px ${outline},
+      5px 5px 0px ${outline},
+      5px -5px 0px ${outline},
+      -5px 5px 0px ${outline},
+      -5px -5px 0px ${outline};
+      
+    &.c {
+      color: ${fill};
+    }
+    &.e {
+      color: ${error};
+    }
   }
 `;
 
@@ -62,7 +63,6 @@ const PracticeScreen: React.FC = () => {
   const [str, setStr] = useState("");
   const [next, setNext] = useState("");
   const [progress, setProgress] = useState("");
-  const [remaining, setRemaining] = useState("");
   const [pressed, setPressed] = useState("");
   const [savedPool, setSavedPool] = useState("");
 
@@ -73,6 +73,9 @@ const PracticeScreen: React.FC = () => {
     let str = "";
     while (str.length < length) {
       str += pool[Math.floor(Math.random() * pool.length)];
+
+      if (str === "_") str = "";
+      if (str.length === length && str.charAt(-1) === "_") str = str.slice(0, -1);
     }
 
     return str;
@@ -81,7 +84,6 @@ const PracticeScreen: React.FC = () => {
   const setupStr = (pool: string) => {
     const newStr = createString(pool);
     setStr(newStr);
-    setRemaining(newStr);
     setProgress("");
     setNext(newStr.charAt(0));
   };
@@ -94,11 +96,15 @@ const PracticeScreen: React.FC = () => {
         pool += keys[key];
       }
     }
+    if (settings.options.capitals) pool += pool.toUpperCase();
+    if (settings.options.spaces) pool += "____";
     setSavedPool(pool);
     setupStr(pool);
   };
 
   const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.repeat) return;
+    if (e.key === "Alt" || e.key === "Control" || e.key === "Shift") return;
     setPressed(e.key + Date.now());
   };
   
@@ -109,16 +115,27 @@ const PracticeScreen: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (pressed[0] !== next) return;
-    const newProgress = progress + next;
-    setProgress(newProgress);
-    setRemaining(str.slice(newProgress.length));
+    if (!pressed) return;
 
-    if (newProgress.length === str.length) {
+    const keyPress = pressed.slice(0, -13);
+    let newProgress = progress;
+
+    if (keyPress === "Backspace") {
+      newProgress = progress.slice(0, -1);
+    } else if (keyPress === next) {
+      newProgress += "c";
+    } else if (settings.options.errors) {
+      newProgress += "e";
+    }
+
+    setProgress(newProgress.substring(0, str.length));
+
+    if (newProgress.length === str.length && !/[e]/.test(newProgress)) {
       // CELEBRATION HERE
       setTimeout(() => setupStr(savedPool), 300);
     } else {
-      setNext(str.charAt(newProgress.length));
+      const nextKey = str.charAt(newProgress.length);
+      setNext(nextKey === "_" ? " " : nextKey);
     }
   }, [pressed]);
 
@@ -129,8 +146,7 @@ const PracticeScreen: React.FC = () => {
       </Back>
       <StyledScreen>
         <Letters>
-          <span>{progress}</span>
-          <span>{remaining}</span>
+          {str.split("").map((l, i) => <span key={i} className={progress.charAt(i)}>{l}</span>)}
         </Letters>
       </StyledScreen>
     </div>

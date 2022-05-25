@@ -7,9 +7,10 @@ const Engine: React.FC = () => {
   const [transitioning, setTransitioning] = React.useState(false);
   const [transition, setTransition] = React.useState("fade");
   const [practiceSettings, updatePracticeSettings] = React.useState({
+    menu: "",
     pool: {
       top: false,
-      home: false,
+      home: true,
       bottom: false,
       numbers: false
     },
@@ -17,6 +18,11 @@ const Engine: React.FC = () => {
       min: 6,
       max: 20,
       isRange: false
+    },
+    options: {
+      errors: false,
+      spaces: false,
+      capitals: false
     }
   });
 

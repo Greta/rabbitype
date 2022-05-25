@@ -1,11 +1,9 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import EngineContext, { EngineContextObject } from "../modules/EngineContext";
 
-import radioOn from "../assets/radio-on.png";
-import radioOff from "../assets/radio-off.png";
-
-const highlight = "cyan";
+const color1 = "cyan";
+const color2 = "magenta";
 
 const Buttons = styled.div`
   & > div {
@@ -17,8 +15,8 @@ const Buttons = styled.div`
       background: #1a1a1a;
     }
     &.on {
-      border-color: ${highlight};
-      color: ${highlight};
+      border-color: ${color1};
+      color: ${color1};
     }
   }
 `;
@@ -53,7 +51,7 @@ const OptionGroup = styled.div`
   margin: 0 5vw;
   > div {
     &.on {
-      color: ${highlight}
+      color: ${color1}
     }
     &.off {
       color: #1a1a1a;
@@ -61,9 +59,25 @@ const OptionGroup = styled.div`
   }
 `;
 
+const OptionBool = styled.div`
+  :before {
+    content: "";
+    display: inline-block;
+    border: 3px solid white;
+    height: .75em;
+    width: .75em;
+    margin-right: 10px;
+    position: relative;
+    top: 4px;
+  }
+  &.true:before {
+    background: ${color2}
+  }
+`;
+
 const Go = styled.div`
   color: magenta;
-  border: 3px solid magenta;
+  border: 3px solid ${color2};
   float: right;
   padding: 10px 15px 6px;
   margin-top: 50px;
@@ -106,17 +120,20 @@ const MainMenu: React.FC = () => {
     updatePracticeSettings: updateSettings,
     changeScreen
   } = useContext(EngineContext) as EngineContextObject;
-  const [menuChoice, setMenuChoice] = useState("");
 
-  const handleMinUpdate = (i: number) => {
-    const newSettings = { ...settings };
-    newSettings.length.min = i;
-    updateSettings(newSettings);
+  const handleMenuUpdate = (menu: string) => {
+    updateSettings({ ...settings, menu });
   };
 
   const handleToggleRange = (isRange: boolean) => {
     const newSettings = { ...settings };
     newSettings.length.isRange = isRange;
+    updateSettings(newSettings);
+  };
+
+  const handleMinUpdate = (i: number) => {
+    const newSettings = { ...settings };
+    newSettings.length.min = i;
     updateSettings(newSettings);
   };
 
@@ -126,25 +143,33 @@ const MainMenu: React.FC = () => {
     updateSettings(newSettings);
   };
 
+  const handleToggleOptions = (bool: boolean, option: string) => {
+    const optionKey = option as keyof typeof settings.options;
+    const newSettings = { ...settings };
+    newSettings.options[optionKey] = bool;
+    updateSettings(newSettings);
+  };
+
+
   return (
     <Flex>
       <Menu>
         <h1>Rabbitype</h1>
         <Buttons>
           <div
-            className={menuChoice === "story" ? "on" : ""}
-            onClick={() => setMenuChoice("story")}>STORY</div>
+            className={settings.menu === "story" ? "on" : ""}
+            onClick={() => handleMenuUpdate("story")}>STORY</div>
           <div
-            className={menuChoice === "practice" ? "on" : ""}
-            onClick={() => setMenuChoice("practice")}>PRACTICE</div>
+            className={settings.menu === "practice" ? "on" : ""}
+            onClick={() => handleMenuUpdate("practice")}>PRACTICE</div>
         </Buttons>
       </Menu>
-      {menuChoice === "story" &&
+      {settings.menu === "story" &&
         <SubMenu>
           <h2>[Story Track]</h2>
         </SubMenu>
       }
-      {menuChoice === "practice" &&
+      {settings.menu === "practice" &&
         <SubMenu>
           <h2>Practice</h2>
           <h3>Key Pool</h3>
@@ -155,6 +180,14 @@ const MainMenu: React.FC = () => {
             <Option id="numbers" text="Numbers" />
           </OptionGroup>
           <h3>Length of Segment</h3>
+          <OptionGroup>
+            <OptionBool
+              className={settings.length.isRange ? "true" : ""}
+              onClick={() => handleToggleRange(!settings.length.isRange)}
+            >
+              <small>range</small>
+            </OptionBool><br /><br />
+          </OptionGroup>
           <OptionGroup>
             {[...Array(20)].map((num, i) =>
               <div
@@ -168,16 +201,6 @@ const MainMenu: React.FC = () => {
                 {i + 1}
               </div>
             )}
-          </OptionGroup>
-          <OptionGroup>
-            <div onClick={() => handleToggleRange(!settings.length.isRange)}>
-              {settings.length.isRange &&
-                <img src={radioOn} />
-              }
-              {!settings.length.isRange &&
-                <img src={radioOff} />
-              } <small>make range</small>
-            </div>
           </OptionGroup>
           {settings.length.isRange &&
             <OptionGroup>
@@ -195,6 +218,27 @@ const MainMenu: React.FC = () => {
               )}
             </OptionGroup>
           }
+          <h3>More Options</h3>
+          <OptionGroup>
+            <OptionBool
+              className={settings.options.errors ? "true" : ""}
+              onClick={() => handleToggleOptions(!settings.options.errors, "errors")}
+            >
+              <small>backspace errors</small>
+            </OptionBool>
+            <OptionBool
+              className={settings.options.spaces ? "true" : ""}
+              onClick={() => handleToggleOptions(!settings.options.spaces, "spaces")}
+            >
+              <small>spaces</small>
+            </OptionBool>
+            <OptionBool
+              className={settings.options.capitals ? "true" : ""}
+              onClick={() => handleToggleOptions(!settings.options.capitals, "capitals")}
+            >
+              <small>capitals</small>
+            </OptionBool>
+          </OptionGroup>
           <Go onClick={() => changeScreen("practice")}>Go!</Go>
         </SubMenu>
       }
