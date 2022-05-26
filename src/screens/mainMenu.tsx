@@ -49,6 +49,35 @@ const OptionGroup = styled.div`
   flex-wrap: wrap;
   justify-content: space-between;
   margin: 0 5vw;
+  &.min > div , &.max > div {
+    color: black;
+    position: relative;
+    :before {
+      content: "^";
+      position: absolute;
+      width: 100%;
+      text-align: center;
+    }
+    &:not(.arrow):hover:before {
+      opacity: .5;
+    }
+  }
+  &.min > div {
+    :before {
+      transform: scale(1, -1);
+      bottom: 5px;
+    }
+  }
+  &.show > div {
+    &.arrow, &:hover {
+      :before {
+        color: ${color2};
+      }
+    }
+  }
+  &.isRange > div {
+    color: ${color1}
+  }
   > div {
     &.on {
       color: ${color1}
@@ -134,12 +163,15 @@ const MainMenu: React.FC = () => {
   };
 
   const handleMinUpdate = (i: number) => {
+    if (i > settings.length.max && isRange) return;
     const newSettings = { ...settings };
     newSettings.length.min = i;
+    if (i > settings.length.max) settings.length.max = i;
     updateSettings(newSettings);
   };
 
   const handleMaxUpdate = (i: number) => {
+    if (i < settings.length.min) return;
     const newSettings = { ...settings };
     newSettings.length.max = i;
     updateSettings(newSettings);
@@ -187,38 +219,46 @@ const MainMenu: React.FC = () => {
               onClick={() => handleToggleRange(!isRange)}
             >
               <small>range</small>
-            </OptionBool><br /><br />
+            </OptionBool>
           </OptionGroup>
-          <OptionGroup>
+          <OptionGroup className={isRange ? "min show" : "min"}>
             {[...Array(20)].map((num, i) =>
               <div
                 key={i}
                 onClick={() => handleMinUpdate(i + 1)}
+                className={min === i + 1 ? "arrow" : ""}
+              >
+                {i + 1}
+              </div>
+            )}
+          </OptionGroup>
+          <OptionGroup className={isRange ? "isRange" : ""}>
+            {[...Array(20)].map((num, i) =>
+              <div
+                key={i}
+                onClick={() => {
+                  if (!isRange) handleMinUpdate(i + 1);
+                }}
                 className={
                   min === i + 1 ? "on" :
-                    isRange && max < i + 2 ? "off" : ""
+                    (isRange && max < i + 1 || isRange && min > i) ? "off" : ""
                 }
               >
                 {i + 1}
               </div>
             )}
           </OptionGroup>
-          {isRange &&
-            <OptionGroup>
-              {[...Array(20)].map((num, i) =>
-                <div
-                  key={i}
-                  onClick={() => handleMaxUpdate(i + 1)}
-                  className={
-                    max === i + 1 ? "on" :
-                      min > i ? "off" : ""
-                  }
-                >
-                  {i + 1}
-                </div>
-              )}
-            </OptionGroup>
-          }
+          <OptionGroup className={isRange ? "max show" : "max"}>
+            {[...Array(20)].map((num, i) =>
+              <div
+                key={i}
+                onClick={() => handleMaxUpdate(i + 1)}
+                className={max === i + 1 ? "arrow" : ""}
+              >
+                {i + 1}
+              </div>
+            )}
+          </OptionGroup>
           <h3>More Options</h3>
           <OptionGroup>
             <OptionBool
