@@ -65,6 +65,7 @@ const PracticeScreen: React.FC = () => {
   const [progress, setProgress] = useState("");
   const [pressed, setPressed] = useState("");
   const [savedPool, setSavedPool] = useState("");
+  const [isCelebrating, setIsCelebrating] = useState(false);
 
   const createString = (pool: string) => {
     const { min, max, isRange } = settings.length;
@@ -86,6 +87,7 @@ const PracticeScreen: React.FC = () => {
     setStr(newStr);
     setProgress("");
     setNext(newStr.charAt(0));
+    setIsCelebrating(false);
   };
 
   const configurePool = () => {
@@ -119,7 +121,7 @@ const PracticeScreen: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (!pressed) return;
+    if (!pressed || isCelebrating) return;
 
     const keyPress = pressed.slice(0, -13);
     let newProgress = progress;
@@ -137,6 +139,7 @@ const PracticeScreen: React.FC = () => {
     if (newProgress.length === str.length && !/[e]/.test(newProgress)) {
       // CELEBRATION HERE
       setTimeout(() => setupStr(savedPool), 300);
+      setIsCelebrating(true);
     } else {
       const nextKey = str.charAt(newProgress.length);
       setNext(nextKey === "_" ? " " : nextKey);

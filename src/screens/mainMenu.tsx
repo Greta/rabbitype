@@ -120,6 +120,8 @@ const MainMenu: React.FC = () => {
     updatePracticeSettings: updateSettings,
     changeScreen
   } = useContext(EngineContext) as EngineContextObject;
+  
+  const { isRange, min, max } = settings.length;
 
   const handleMenuUpdate = (menu: string) => {
     updateSettings({ ...settings, menu });
@@ -150,11 +152,10 @@ const MainMenu: React.FC = () => {
     updateSettings(newSettings);
   };
 
-
   return (
     <Flex>
       <Menu>
-        <h1>Rabbitype</h1>
+        <h1 className="title">Rabbitype</h1>
         <Buttons>
           <div
             className={settings.menu === "story" ? "on" : ""}
@@ -182,8 +183,8 @@ const MainMenu: React.FC = () => {
           <h3>Length of Segment</h3>
           <OptionGroup>
             <OptionBool
-              className={settings.length.isRange ? "true" : ""}
-              onClick={() => handleToggleRange(!settings.length.isRange)}
+              className={isRange ? "true" : ""}
+              onClick={() => handleToggleRange(!isRange)}
             >
               <small>range</small>
             </OptionBool><br /><br />
@@ -194,23 +195,23 @@ const MainMenu: React.FC = () => {
                 key={i}
                 onClick={() => handleMinUpdate(i + 1)}
                 className={
-                  settings.length.min === i + 1 ? "on" :
-                    settings.length.max < i + 2 ? "off" : ""
+                  min === i + 1 ? "on" :
+                    isRange && max < i + 2 ? "off" : ""
                 }
               >
                 {i + 1}
               </div>
             )}
           </OptionGroup>
-          {settings.length.isRange &&
+          {isRange &&
             <OptionGroup>
               {[...Array(20)].map((num, i) =>
                 <div
                   key={i}
                   onClick={() => handleMaxUpdate(i + 1)}
                   className={
-                    settings.length.max === i + 1 ? "on" :
-                      settings.length.min > i ? "off" : ""
+                    max === i + 1 ? "on" :
+                      min > i ? "off" : ""
                   }
                 >
                   {i + 1}
