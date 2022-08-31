@@ -1,7 +1,12 @@
 import React from "react";
 
+export interface MenuSettingsProps {
+  location: string;
+  storyName: string;
+  storyNames: string[];
+}
+
 export interface PracticeSettingsProps {
-  menu: string;
   pool: {
     top: boolean;
     home: boolean;
@@ -23,6 +28,8 @@ export interface PracticeSettingsProps {
 export interface EngineContextObject {
   screen: string;
   changeScreen: (screen: string, transition?: string) => void;
+  menuSettings: MenuSettingsProps;
+  updateMenuSettings: (settings: MenuSettingsProps) => void;
   practiceSettings: PracticeSettingsProps;
   updatePracticeSettings: (settings: PracticeSettingsProps) => void;
 }

@@ -1,13 +1,23 @@
 import React from "react";
 import { EngineProvider, Screen, Screens, TransitionElement } from ".";
 import { Logo, MainMenu, Practice } from "../screens";
+import _ from "lodash";
 
 const Engine: React.FC = () => {
   const [screen, setScreen] = React.useState("logo");
   const [transitioning, setTransitioning] = React.useState(false);
   const [transition, setTransition] = React.useState("fade");
+  const [stories] = React.useState({
+    "dingdong": {},
+    "testing123": {},
+    "tubular": {}
+  });
+  const [menuSettings, updateMenuSettings] = React.useState({
+    location: "",
+    storyName: "",
+    storyNames: _.keys(stories)
+  });
   const [practiceSettings, updatePracticeSettings] = React.useState({
-    menu: "",
     pool: {
       top: false,
       home: true,
@@ -44,6 +54,8 @@ const Engine: React.FC = () => {
     <EngineProvider value={{
       screen,
       changeScreen,
+      menuSettings,
+      updateMenuSettings,
       practiceSettings,
       updatePracticeSettings
     }}>

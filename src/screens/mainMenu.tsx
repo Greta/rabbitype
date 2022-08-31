@@ -1,12 +1,12 @@
 import React, { useContext } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import EngineContext, { EngineContextObject } from "../modules/EngineContext";
 
 const color1 = "cyan";
 const color2 = "magenta";
 
-const Buttons = styled.div`
-  & > div {
+const MenuButtons = styled.div`
+  div:not(.subMenu) {
     text-align: center;
     margin: 15px;
     padding: 10px 10px 5px;
@@ -17,6 +17,13 @@ const Buttons = styled.div`
     &.on {
       border-color: ${color1};
       color: ${color1};
+    }
+  }
+  .subMenu {
+    margin-left: 15px;
+    border-left: 5px solid ${color2};
+    > div {
+      text-align: left;
     }
   }
 `;
@@ -39,9 +46,36 @@ const Menu = styled.div`
   }
 `;
 
-const SubMenu = styled.div`
+const MenuScreen = styled.div`
   flex: 1;
   padding-left: 50px;
+`;
+
+const StoryName = styled.div`
+  font-size: 18px;
+  padding: 20px;
+`;
+
+const blink = keyframes`
+  50% {
+    opacity: 0;
+  }
+`;
+
+const Input = styled.div`
+  position: relative;
+  border: 3px solid white;
+  padding: 15px 15px 10px;
+  &::after {
+    content: "";
+    position: absolute;
+    top: 10px;
+    bottom: 15px;
+    width: 5px;
+    background: ${color2};
+    margin-left: 3px;
+    animation: ${blink} 1s step-start infinite;
+  }
 `;
 
 const OptionGroup = styled.div`
@@ -145,15 +179,19 @@ const Option: React.FC<OptionButtonProps> = ({id, text}) => {
 
 const MainMenu: React.FC = () => {
   const {
+    menuSettings: menu,
+    updateMenuSettings,
     practiceSettings: settings,
     updatePracticeSettings: updateSettings,
     changeScreen
   } = useContext(EngineContext) as EngineContextObject;
-  
+
   const { isRange, min, max } = settings.length;
 
-  const handleMenuUpdate = (menu: string) => {
-    updateSettings({ ...settings, menu });
+  const isStoryMenuActive = () => ["story", "create", "load"].includes(menu.location);
+
+  const handleMenuUpdate = (location: string) => {
+    updateMenuSettings({ ...menu, location });
   };
 
   const handleToggleRange = (isRange: boolean) => {
@@ -188,22 +226,45 @@ const MainMenu: React.FC = () => {
     <Flex>
       <Menu>
         <h1 className="title">Rabbitype</h1>
-        <Buttons>
+        <MenuButtons>
           <div
-            className={settings.menu === "story" ? "on" : ""}
-            onClick={() => handleMenuUpdate("story")}>STORY</div>
+            className={isStoryMenuActive() ? "on" : ""}
+            onClick={() => handleMenuUpdate("story")}>STORY MODE</div>
+          {isStoryMenuActive() &&
+            <div className="subMenu">
+              <div
+                className={menu.location === "create" ? "on" : ""}
+                onClick={() => handleMenuUpdate("create")}>New</div>
+              <div
+                className={menu.location === "load" ? "on" : ""}
+                onClick={() => handleMenuUpdate("load")}>Load</div>
+            </div>
+          }
           <div
-            className={settings.menu === "practice" ? "on" : ""}
+            className={menu.location === "practice" ? "on" : ""}
             onClick={() => handleMenuUpdate("practice")}>PRACTICE</div>
-        </Buttons>
+        </MenuButtons>
       </Menu>
-      {settings.menu === "story" &&
-        <SubMenu>
-          <h2>[Story Track]</h2>
-        </SubMenu>
+      {menu.location === "create" &&
+        <MenuScreen>
+          <h2>Start a new story ...</h2>
+          <div>
+            <label>TYPE a name!</label>
+            <Input>{menu.storyName}</Input>
+          </div>
+          <Go onClick={() => console.log(menu.storyName, "start game with this name")}>Go!</Go>
+        </MenuScreen>
       }
-      {settings.menu === "practice" &&
-        <SubMenu>
+      {menu.location === "load" &&
+        <MenuScreen>
+          <h2>Load Story</h2>
+          {menu.storyNames.map((storyName: string) =>
+            <StoryName key={storyName}>{storyName}</StoryName>
+          )}
+        </MenuScreen>
+      }
+      {menu.location === "practice" &&
+        <MenuScreen>
           <h2>Practice</h2>
           <h3>Key Pool</h3>
           <OptionGroup>
@@ -212,7 +273,7 @@ const MainMenu: React.FC = () => {
             <Option id="bottom" text="Bottom Row" />
             <Option id="numbers" text="Numbers" />
           </OptionGroup>
-          <h3>Length of Segment</h3>
+          <h3>Length of String</h3>
           <OptionGroup>
             <OptionBool
               className={isRange ? "true" : ""}
@@ -281,7 +342,7 @@ const MainMenu: React.FC = () => {
             </OptionBool>
           </OptionGroup>
           <Go onClick={() => changeScreen("practice")}>Go!</Go>
-        </SubMenu>
+        </MenuScreen>
       }
     </Flex>
   );
