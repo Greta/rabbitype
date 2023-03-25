@@ -127,20 +127,22 @@ const MainMenu: React.FC = () => {
       </Menu>
       {menu.location === "create" &&
         <MenuScreen>
-          <h2>Start a new story ...</h2>
+          <h2>In Progress...</h2>
+          {/* <h2>Start a new story ...</h2>
           <div>
             <label>TYPE a name!</label>
             <Input>{menu.storyName}</Input>
           </div>
-          <Go onClick={() => console.log(menu.storyName, "start game with this name")}>Go!</Go>
+          <Go onClick={() => console.log(menu.storyName, "start game with this name")}>Go!</Go> */}
         </MenuScreen>
       }
       {menu.location === "load" &&
         <MenuScreen>
-          <h2>Load Story</h2>
+          <h2>In Progress...</h2>
+          {/* <h2>Load Story</h2>
           {menu.storyNames.map((storyName: string) =>
             <StoryName key={storyName}>{storyName}</StoryName>
-          )}
+          )} */}
         </MenuScreen>
       }
       {menu.location === "practice" &&
