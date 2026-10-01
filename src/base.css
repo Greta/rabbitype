@@ -178,6 +178,7 @@ h1 em {
 }
 .settings {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   gap: 18px;
   padding: 22px 27px;
@@ -855,6 +856,16 @@ footer > span:last-child > span {
     padding: 17px 16px;
     gap: 12px;
     flex-wrap: wrap;
+  }
+  .settings fieldset:first-child {
+    width: 100%;
+  }
+  .modes {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .modes span {
+    text-align: center;
   }
   .segmented span {
     padding-inline: 10px;

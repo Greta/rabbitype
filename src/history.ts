@@ -21,7 +21,7 @@ function isRun(value: unknown): value is Run {
   const run = value as Record<string, unknown>;
   return (
     typeof run.id === 'string' &&
-    (run.mode === 'words' || run.mode === 'home-row') &&
+    ['words', 'home-row', 'top-row', 'bottom-row'].includes(run.mode as string) &&
     [30, 60, 120].includes(run.duration as number) &&
     typeof run.wpm === 'number' &&
     Number.isFinite(run.wpm) &&
@@ -47,7 +47,7 @@ export function readHistory(): { history: History; available: boolean } {
       history: {
         version: 1,
         runs: parsed.runs.filter(isRun).slice(0, 10),
-        bests: parsed.bests.filter(isRun).slice(0, 6),
+        bests: parsed.bests.filter(isRun).slice(0, 12),
       },
       available: true,
     };

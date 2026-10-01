@@ -1,4 +1,4 @@
-export type Mode = 'words' | 'home-row';
+export type Mode = 'words' | 'home-row' | 'top-row' | 'bottom-row';
 export type Duration = 30 | 60 | 120;
 export interface Settings {
   mode: Mode;

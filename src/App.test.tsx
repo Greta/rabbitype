@@ -19,9 +19,29 @@ describe('the complete practice flow', () => {
     screen.getByRole('radio', { name: 'Everyday words' }).focus();
     await user.keyboard('{ArrowRight}');
     expect(screen.getByRole('radio', { name: 'Home row' })).toBeChecked();
+    await user.keyboard('{ArrowRight}');
+    expect(screen.getByRole('radio', { name: 'Top row' })).toBeChecked();
+    await user.keyboard('{ArrowRight}');
+    expect(screen.getByRole('radio', { name: 'Bottom row' })).toBeChecked();
     await user.click(screen.getByRole('radio', { name: '60s' }));
     expect(screen.getByRole('radio', { name: '60s' })).toBeChecked();
     expect(screen.getByRole('textbox', { name: 'Your typing' })).toHaveValue('');
+  });
+
+  it.each([
+    { label: 'Top row', mode: 'top-row', allowed: /^[qwertyuiop ]+$/ },
+    { label: 'Bottom row', mode: 'bottom-row', allowed: /^[zxcvbnm ]+$/ },
+  ])('completes and saves a $label session', ({ label, mode, allowed }) => {
+    const { container } = render(<App />);
+    fireEvent.click(screen.getByRole('radio', { name: label }));
+    const passage = container.querySelector('.passage')!.textContent!;
+    expect(passage).toMatch(allowed);
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: passage.slice(0, 8) } });
+    expect(screen.getByRole('radio', { name: label })).toBeDisabled();
+    act(() => vi.advanceTimersByTime(30000));
+    expect(screen.getByRole('heading', { name: 'Nicely done.' })).toHaveFocus();
+    expect(readHistory().history.runs[0]).toMatchObject({ mode, accuracy: 100, wpm: 3 });
+    expect(readHistory().history.bests[0]).toMatchObject({ mode, duration: 30 });
   });
 
   it('starts on input, pauses on Escape, and saves a single result under StrictMode', () => {

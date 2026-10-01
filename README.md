@@ -8,7 +8,7 @@ A calm, playful typing practice app. Choose a pace, type a few words, and track 
 
 ## The experience
 
-- Everyday words and home row practice, with 30, 60, or 120 second sessions.
+- Everyday words plus home, top, and bottom row practice, with 30, 60, or 120 second sessions.
 - A timer that starts with the first character and pauses when the tab or window loses focus.
 - Live speed and accuracy, visible mistake feedback, and a prompt that follows your typing.
 - Backspace, pause, resume, and restart controls, followed by a focused results screen.
@@ -76,4 +76,4 @@ The Check workflow runs tests and a production build on pull requests and pushes
 
 ## Practice content
 
-Practice uses a curated English word bank with lowercase text. Everyday words builds general fluency; home row practice focuses on words typed with the middle letter row. Progress is stored locally in your browser.
+Everyday words builds general fluency with lowercase English words. Home row and top row practice use words restricted to those QWERTY keyboard rows. Bottom row practice uses short key sequences for `z x c v b n m`, since that row has no vowels. Each mode has separate personal bests for every duration, stored locally in your browser.

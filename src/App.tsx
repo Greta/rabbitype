@@ -16,7 +16,15 @@ const DEFAULT_SETTINGS: Settings = { mode: 'words', duration: 30 };
 const MODES: { value: Mode; label: string }[] = [
   { value: 'words', label: 'Everyday words' },
   { value: 'home-row', label: 'Home row' },
+  { value: 'top-row', label: 'Top row' },
+  { value: 'bottom-row', label: 'Bottom row' },
 ];
+const MODE_CAPTIONS: Record<Mode, string> = {
+  words: 'lowercase · no punctuation',
+  'home-row': 'a s d f g · h j k l',
+  'top-row': 'q w e r t · y u i o p',
+  'bottom-row': 'z x c v · b n m',
+};
 const DURATIONS: Duration[] = [30, 60, 120];
 const modeName = (mode: Mode) => MODES.find((item) => item.value === mode)!.label;
 const freshSession = (settings: Settings) =>
@@ -136,7 +144,7 @@ export default function App() {
             <div className="settings">
               <fieldset disabled={locked}>
                 <legend>Practice</legend>
-                <div className="segmented">
+                <div className="segmented modes">
                   {MODES.map((mode) => (
                     <label key={mode.value}>
                       <input
@@ -232,15 +240,11 @@ export default function App() {
                   <div className="session-status">
                     <span className={`status-dot ${phase}`} aria-hidden="true" />
                     {phase === 'running'
-                      ? 'One word at a time'
+                      ? 'One key at a time'
                       : phase === 'paused'
                         ? 'Take a breath. We’ll wait.'
                         : 'Ready when you are'}
-                    <span className="mode-caption">
-                      {settings.mode === 'home-row'
-                        ? 'a s d f · j k l'
-                        : 'lowercase · no punctuation'}
-                    </span>
+                    <span className="mode-caption">{MODE_CAPTIONS[settings.mode]}</span>
                   </div>
                   <div className={`passage-frame ${phase === 'paused' ? 'is-paused' : ''}`}>
                     <Passage text={session.passage} value={session.value} />
@@ -257,7 +261,7 @@ export default function App() {
                     Your typing
                   </label>
                   <p className="sr-only" id="passage-description">
-                    Type these words in order: {session.passage}
+                    Type this text in order: {session.passage}
                   </p>
                   <textarea
                     id="typing-input"
@@ -330,7 +334,11 @@ export default function App() {
                     )}
                     <button className="button secondary" onClick={startAgain}>
                       <span aria-hidden="true">↻</span>{' '}
-                      {phase === 'ready' ? 'New words' : 'Restart'}
+                      {phase === 'ready'
+                        ? settings.mode === 'bottom-row'
+                          ? 'New patterns'
+                          : 'New words'
+                        : 'Restart'}
                     </button>
                   </div>
                 </div>
@@ -427,7 +435,7 @@ export default function App() {
         <p className="eyebrow">A LITTLE TYPING PRACTICE</p>
         <h2 id="about-title">Find a comfortable pace.</h2>
         <p>
-          Choose everyday words or home row practice, then type the displayed words in the box. The
+          Choose everyday words or a keyboard row, then type the displayed text in the box. The
           timer starts with your first character.
         </p>
         <dl>

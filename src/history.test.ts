@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import type { Duration, Mode } from './session';
 import {
   readHistory,
   recordRun,
@@ -57,6 +58,22 @@ describe('local progress', () => {
       JSON.stringify({ ...history, runs: [{ ...run(), wpm: -1 }, run()] }),
     );
     expect(readHistory().history.runs).toEqual([run()]);
+  });
+
+  it('preserves all twelve mode and duration bests across reloads', () => {
+    let history = empty();
+    const modes: Mode[] = ['words', 'home-row', 'top-row', 'bottom-row'];
+    const durations: Duration[] = [30, 60, 120];
+    for (const mode of modes) {
+      for (const duration of durations) {
+        history = recordRun(history, run({ id: `${mode}-${duration}`, mode, duration }));
+      }
+    }
+    expect(saveHistory(history)).toBe(true);
+    const restored = readHistory().history;
+    expect(restored.bests).toHaveLength(12);
+    expect(restored.bests).toEqual(history.bests);
+    expect(restored.runs).toEqual(history.runs);
   });
 
   it('recovers from invalid JSON and handles disabled storage', () => {
