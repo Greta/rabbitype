@@ -95,9 +95,6 @@ export default function App() {
       </a>
       <header className="site-header">
         <a className="brand" href={import.meta.env.BASE_URL} aria-label="Rabbitype home">
-          <span className="brand-mark" aria-hidden="true">
-            r
-          </span>
           <span>
             rabbitype<span className="brand-dot">.</span>
           </span>

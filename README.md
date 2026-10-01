@@ -15,15 +15,13 @@ A calm, playful typing practice app. Choose a pace, type a few words, and track 
 - Personal bests for each mode and duration, plus recent practice saved in this browser.
 - Responsive layout, native keyboard controls, visible focus, and a labelled typing field.
 
-## Why this project
+## Frontend focus
 
-Rabbitype began as an experimental typing game with a pixel-art title screen and plans for a story mode. This refresh keeps the playful name and original pixel font while concentrating on one complete practice experience.
-
-The work demonstrates frontend skills through a small, usable product: explicit state transitions, tested scoring rules, accessible interactions, responsive CSS, resilient browser storage, and a production build that deploys to GitHub Pages. The unfinished story menus and Electron launcher remain available in Git history.
+Rabbitype brings together explicit state transitions, tested scoring rules, accessible interactions, responsive CSS, resilient browser storage, and a production build that deploys to GitHub Pages.
 
 ## Design and engineering decisions
 
-**Native text input.** Typing uses a labelled textarea instead of intercepting printable keys on the document. Tab navigation, text selection, correction, and mobile keyboards keep their native behavior. Pasting and dropping text are blocked during practice. Mistakes use an underline as well as color.
+**Native text input.** Typing uses a labelled textarea. Tab navigation, text selection, correction, and mobile keyboards keep their native behavior. Pasting and dropping text are blocked during practice. Mistakes use an underline as well as color.
 
 **A predictable session model.** A pure reducer owns four phases: ready, running, paused, and finished. `performance.now()` measures active elapsed time; display updates do not determine the deadline. Late timer callbacks cannot extend a session, and paused time is excluded.
 
@@ -31,7 +29,9 @@ The work demonstrates frontend skills through a small, usable product: explicit 
 
 **Local progress.** A versioned, validated localStorage record keeps the last 10 sessions and separate bests for each mode and duration. The sidebar shows the latest three. A tied speed is ranked by accuracy. If storage is unavailable, the app keeps working with progress held for that visit.
 
-**A small toolchain.** React, TypeScript, and Vite power the app. Plain CSS handles layout and styling. There is no backend, external font request, analytics service, or UI component dependency. The original Peaberry font is used only for the wordmark.
+**A small toolchain.** React, TypeScript, and Vite power the app. Plain CSS handles layout and styling. There is no backend, external font request, analytics service, or UI component dependency. The Peaberry font is used only for the wordmark.
+
+**A CMYK palette.** Cyan, magenta, and yellow accents sit on a black background. Text feedback pairs cyan for correct characters with yellow underlines for mistakes, while native controls and visible focus indicators support keyboard navigation.
 
 ## Run locally
 
@@ -53,7 +53,7 @@ npm run preview  # serve the production build locally
 
 ### Publish to GitHub Pages
 
-The live demo is served from the repository's `gh-pages` branch. With Git authenticated and a commit identity configured, run `npm run deploy`. This checks the source, builds the app, and publishes `dist` while preserving the deployment branch's history. The Vite base path is `/rabbitype/`.
+The live demo is served from the repository's `gh-pages` branch. With Git authenticated and a commit identity configured, run `npm run deploy`. This checks the source, builds the app, and publishes `dist`. The Vite base path is `/rabbitype/`.
 
 ## Validation
 
@@ -74,6 +74,6 @@ The Check workflow runs tests and a production build on pull requests and pushes
 | `src/Passage.tsx` | Character feedback and prompt scrolling               |
 | `src/base.css`    | Responsive presentation and focus styles              |
 
-## Scope and next steps
+## Practice content
 
-This version intentionally uses a small English word bank, lowercase text, and local progress. Potential next steps include a punctuation mode, a larger curated word bank, and testing with screen-reader users. The current app does not include a story mode, cloud sync, or a leaderboard.
+Practice uses a curated English word bank with lowercase text. Everyday words builds general fluency; home row practice focuses on words typed with the middle letter row. Progress is stored locally in your browser.
